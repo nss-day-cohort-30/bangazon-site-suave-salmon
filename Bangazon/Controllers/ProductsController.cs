@@ -87,8 +87,18 @@ namespace Bangazon.Controllers
         }
 
         [Authorize]
+        public async Task<IActionResult> GetUserProducts()
+        {
+            var user = await GetCurrentUserAsync();
 
+            var products = _context.Product
+                .Include(p => p.ProductType)
+                .Where(p => p.UserId == user.Id);
 
+            return View(await products.ToListAsync());
+        }
+
+        [Authorize]
         // GET: Products/Create
         public IActionResult Create()
         {
