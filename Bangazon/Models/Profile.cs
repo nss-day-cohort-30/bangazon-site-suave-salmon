@@ -28,7 +28,7 @@ namespace Bangazon.Models
 
         [Required]
         [Display(Name = "Address")]
-        public int Address { get; set; }
+        public string StreetAddress { get; set; }
 
         public ApplicationUser User { get; set; }
 

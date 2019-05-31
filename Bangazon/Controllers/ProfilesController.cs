@@ -9,10 +9,11 @@ using Bangazon.Data;
 using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections;
 
 namespace Bangazon.Controllers
 {
-    public class ProfilesController : Controller
+    public class ProfilesController : Controller, IEnumerable<Profile>
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -25,22 +26,28 @@ namespace Bangazon.Controllers
             _context = context;
             _userManager = userManager;
         }
-        //Get current user and create profile is not created
-        var user = await GetCurrentUserAsync();
-        public static Profile getUserInfo(user)
-        {
-            
-        }
+      
 
         // GET: Profiles
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Profile.ToListAsync());
+            Profile currentUser = new Profile();
+
+            var user = await GetCurrentUserAsync();
+                currentUser.StreetAddress = user.StreetAddress;
+                currentUser.FirstName = user.FirstName;
+                currentUser.LastName = user.LastName;
+                currentUser.UserName = user.UserName;
+                currentUser.Email = user.Email;            
+           
+            return View(currentUser);
         }
 
         // GET: Profiles/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+                        
             if (id == null)
             {
                 return NotFound();
@@ -167,6 +174,16 @@ namespace Bangazon.Controllers
         private bool ProfileExists(int id)
         {
             return _context.Profile.Any(e => e.ProfileId == id);
+        }
+
+        public IEnumerator<Profile> GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
         }
     }
 }
