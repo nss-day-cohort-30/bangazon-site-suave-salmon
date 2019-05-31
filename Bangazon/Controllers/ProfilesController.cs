@@ -26,7 +26,11 @@ namespace Bangazon.Controllers
             _userManager = userManager;
         }
         //Get current user and create profile is not created
-
+        var user = await GetCurrentUserAsync();
+        public static Profile getUserInfo(user)
+        {
+            
+        }
 
         // GET: Profiles
         public async Task<IActionResult> Index()
