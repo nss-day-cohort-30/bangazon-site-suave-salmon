@@ -7,17 +7,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bangazon.Data;
 using Bangazon.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Bangazon.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ProductsController(ApplicationDbContext context)
+        public ProductsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Products
         public async Task<IActionResult> Index()
@@ -46,6 +51,7 @@ namespace Bangazon.Controllers
             return View(product);
         }
 
+
         public async Task<IActionResult> GetProductsByCategory(int id)
         {
 
@@ -60,11 +66,13 @@ namespace Bangazon.Controllers
 
             return View(await products.ToListAsync());
         }
+
+        [Authorize]
+
         // GET: Products/Create
         public IActionResult Create()
         {
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label");
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
             return View();
         }
 
@@ -73,16 +81,22 @@ namespace Bangazon.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,DateCreated,Description,Title,Price,Quantity,UserId,City,ImagePath,ProductTypeId")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,DateCreated,Description,UserId,Title,Price,Quantity,City,ImagePath,ProductTypeId")] Product product)
         {
+            // Remove the user from the model validation because it is
+            // not information posted in the form
+            ModelState.Remove("UserId");
+            var user = await GetCurrentUserAsync();
+
             if (ModelState.IsValid)
             {
+                product.User = user;
+                product.UserId = user.Id;
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
             return View(product);
         }
 
