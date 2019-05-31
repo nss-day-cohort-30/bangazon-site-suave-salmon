@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bangazon.Data;
 using Bangazon.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Bangazon.Controllers
 {
@@ -51,6 +51,25 @@ namespace Bangazon.Controllers
             return View(product);
         }
 
+        public async Task<IActionResult> Types()
+        {
+            List<GroupedProducts> model = new List<GroupedProducts>();
+          
+            model = await (
+                from t in _context.ProductType
+                join p in _context.Product
+                on t.ProductTypeId equals p.ProductTypeId
+                group new { t, p } by new { t.ProductTypeId, t.Label } into grouped
+                select new GroupedProducts
+                {
+                    TypeId = grouped.Key.ProductTypeId,
+                    TypeName = grouped.Key.Label,
+                    ProductCount = grouped.Select(x => x.p.ProductId).Count(),
+                    Products = grouped.Select(x => x.p).Take(3)
+                }).ToListAsync();
+
+            return View(model);
+        }
 
         public async Task<IActionResult> GetProductsByCategory(int id)
         {
@@ -68,6 +87,7 @@ namespace Bangazon.Controllers
         }
 
         [Authorize]
+
 
         // GET: Products/Create
         public IActionResult Create()
