@@ -1,8 +1,9 @@
-﻿@model IEnumerable<Bangazon.Models.ProductType>
+﻿@model IEnumerable<Bangazon.Models.GroupedProducts>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Type";
 }
+
 
 <h1>Index</h1>
 
@@ -13,24 +14,26 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Label)
+                @Html.DisplayNameFor(model => model)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
+
         @foreach (var item in Model)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Label)
+                    <a href=@($"http://localhost:5000/Products/GetProductsByCategory/{item.TypeId}")>@Html.DisplayFor(modelItem => item.TypeName)</a>
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.ProductTypeId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ProductTypeId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ProductTypeId">Delete</a>
+                    @Html.DisplayFor(modelItem => item.ProductCount)
                 </td>
             </tr>
+
+            
+
             @foreach (var product in item.Products)
             {
                 <tr>
