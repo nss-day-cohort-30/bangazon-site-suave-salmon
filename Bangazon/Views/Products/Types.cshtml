@@ -38,7 +38,7 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => product.Title)
+                        <a href=@($"http://localhost:5000/Products/Details/{product.ProductId}")>@Html.DisplayFor(modelItem => product.Title)</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => product.Price)
