@@ -89,23 +89,22 @@ namespace Bangazon.Controllers
         [Authorize]
         public async Task<IActionResult> Edit(string id)
         {
-            //var user = await GetCurrentUserAsync();
-            //user.Id = id;
-            var applicationUser = await _context.ApplicationUsers.FindAsync(id);
-            
-           
+            var user = await GetCurrentUserAsync();
+            user.Id = id;
+            //var applicationUser = await _context.ApplicationUsers.FindAsync(id);
+                     
 
             if (id == null)
             {
                 return NotFound();
             }
 
-            if (applicationUser == null)
+            if (user == null)
             {
                 return NotFound();
             }
            
-            return View(applicationUser);
+            return View(user);
         }
 
         // POST: ApplicationUsers/Edit/5
@@ -118,21 +117,23 @@ namespace Bangazon.Controllers
         {
             var user = await GetCurrentUserAsync();
 
-            if (id != applicationUser.Id)
+            if (id != user.Id)
             {
-                return NotFound();
+                return NotFound(); 
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    //_context.Update(applicationUser).State = EntityState.Modified;
+                    //_context.Update(applicationUser).Property(x => x.Id).IsModified = false;
                     _context.Update(applicationUser);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ApplicationUserExists(applicationUser.Id))
+                    if (!ApplicationUserExists(user.Id))
                     {
                         return NotFound();
                     }
@@ -143,7 +144,7 @@ namespace Bangazon.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(applicationUser);
+            return View(user);
         }
 
         // GET: ApplicationUsers/Delete/5
