@@ -90,14 +90,15 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             var user = await GetCurrentUserAsync();
+            //user.Id = id;
             var profile = await _context.Profile.FindAsync(id);
 
-            if (id == null && profile.User == user)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            if (profile == null && profile.User == null)
+            if (profile == null)
             {
                 return NotFound();
             }
