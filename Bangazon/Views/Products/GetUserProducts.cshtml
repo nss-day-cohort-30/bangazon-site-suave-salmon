@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<Bangazon.Models.Product>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "GetUserProducts";
 }
 
-<h1>Index</h1>
+<h1>My Products</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -30,12 +30,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.City)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.ImagePath)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
+            </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.ProductType)
             </th>
@@ -52,7 +49,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                <a href=@($"http://localhost:5000/Products/Details/{item.ProductId}")>@Html.DisplayFor(modelItem => item.Title)</a> 
+                <a href=@($"http://localhost:5000/Products/Details/{item.ProductId}")>@Html.DisplayFor(modelItem => item.Title)</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)
@@ -63,19 +60,17 @@
             <td>
                 @Html.DisplayFor(modelItem => item.City)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.ImagePath)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.FirstName) @Html.DisplayFor(modelItem => item.User.LastName) </td>
+            </td>*@
             <td>
                 <a href=@($"http://localhost:5000/Products/GetProductsByCategory/{item.ProductTypeId}")>@Html.DisplayFor(modelItem => item.ProductType.Label)</a>
             </td>
-            @*<td>
-                <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
+            <td>
+                @*<a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |*@
                 <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
-            </td>*@
+            </td>
         </tr>
 }
     </tbody>

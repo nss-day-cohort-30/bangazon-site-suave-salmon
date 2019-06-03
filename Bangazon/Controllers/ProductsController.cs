@@ -89,8 +89,18 @@ namespace Bangazon.Controllers
         }
 
         [Authorize]
+        public async Task<IActionResult> GetUserProducts()
+        {
+            var user = await GetCurrentUserAsync();
 
+            var products = _context.Product
+                .Include(p => p.ProductType)
+                .Where(p => p.UserId == user.Id);
 
+            return View(await products.ToListAsync());
+        }
+
+        [Authorize]
         // GET: Products/Create
         public IActionResult Create()
         {
@@ -205,7 +215,7 @@ namespace Bangazon.Controllers
             var product = await _context.Product.FindAsync(id);
             _context.Product.Remove(product);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(GetUserProducts));
         }
 
         private bool ProductExists(int id)
