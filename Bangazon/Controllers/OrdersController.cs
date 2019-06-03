@@ -49,9 +49,36 @@ namespace Bangazon.Controllers
         // GET: Abandoned orders
         public async Task<IActionResult> GetAbandonedOrders()
         {
-            //from original get
-            var applicationDbContext = _context.Order.Include(o => o.PaymentType).Include(o => o.User);
+             var applicationDbContext = _context.Order
+                .Include(o => o.PaymentType)
+                .Include(o => o.User)
+                .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.Product)
+                .ThenInclude(pt => pt.ProductType)
+               
+                ;
+
+
+
+
             return View(await applicationDbContext.ToListAsync());
+
+
+
+
+
+
+
+
+
+            /*var applicationDbContext = _context.Order.FromSql(@"select pt.Label, count(o.OrderId) 'Incomplete Orders'
+                from[Order] o
+                join OrderProduct op on op.OrderId = o.OrderId
+                join Product p on p.ProductId = op.ProductId
+                join ProductType pt on pt.ProductTypeId = p.ProductTypeId
+                group by pt.Label;")
+                ;
+                //-- where o.PaymentTypeId = null*/
         }
 
         // GET: Orders/Create
