@@ -28,14 +28,21 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User).OrderByDescending(a => a.DateCreated).Take(20);
-                //.Reverse().Take(20);
+              
            
 
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Products/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [Authorize]
+        public async Task<IActionResult> Search(string Search)
+        {
+            List<Product> productsMatched = await _context.Product.Where(product => product.Title.Contains(Search)).ToListAsync();
+            return View(productsMatched);
+        }
+
+            // GET: Products/Details/5
+            public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -90,8 +97,18 @@ namespace Bangazon.Controllers
         }
 
         [Authorize]
+        public async Task<IActionResult> GetUserProducts()
+        {
+            var user = await GetCurrentUserAsync();
 
+            var products = _context.Product
+                .Include(p => p.ProductType)
+                .Where(p => p.UserId == user.Id);
 
+            return View(await products.ToListAsync());
+        }
+
+        [Authorize]
         // GET: Products/Create
         public IActionResult Create()
         {
@@ -206,7 +223,7 @@ namespace Bangazon.Controllers
             var product = await _context.Product.FindAsync(id);
             _context.Product.Remove(product);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(GetUserProducts));
         }
 
         private bool ProductExists(int id)
