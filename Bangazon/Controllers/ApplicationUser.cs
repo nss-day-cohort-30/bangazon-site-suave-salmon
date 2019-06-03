@@ -13,7 +13,7 @@ using System.Collections;
 
 namespace Bangazon.Controllers
 {
-    public class ProfilesController : Controller, IEnumerable<Profile>
+    public class ApplicationUsersController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -21,7 +21,7 @@ namespace Bangazon.Controllers
         private Task<ApplicationUser> GetCurrentUserAsync() =>
           _userManager.GetUserAsync(HttpContext.User);
 
-        public ProfilesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ApplicationUsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -32,7 +32,7 @@ namespace Bangazon.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            Profile currentUser = new Profile();
+            ApplicationUser currentUser = new ApplicationUser();
 
             var user = await GetCurrentUserAsync();
                 currentUser.StreetAddress = user.StreetAddress;
@@ -44,8 +44,8 @@ namespace Bangazon.Controllers
             return View(currentUser);
         }
 
-        // GET: Profiles/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: ApplicationUsers/Details/5
+        public async Task<IActionResult> Details( string id)
         {
                         
             if (id == null)
@@ -53,69 +53,72 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
 
-            var profile = await _context.Profile
-                .FirstOrDefaultAsync(m => m.ProfileId == id);
-            if (profile == null)
+            var applicationUser = await _context.ApplicationUsers
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (applicationUser == null)
             {
                 return NotFound();
             }
 
-            return View(profile);
+            return View(applicationUser);
         }
 
-        // GET: Profiles/Create
+        // GET: ApplicationUsers/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Profiles/Create
+        // POST: ApplicationUsers/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProfileId,FirstName,LastName,UserName,Email,PhoneNumber")] Profile profile)
+        public async Task<IActionResult> Create([Bind("UserId,FirstName,LastName,UserName,Email,PhoneNumber")] ApplicationUser applicationUser)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(profile);
+                _context.Add(applicationUser);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(profile);
+            return View(applicationUser);
         }
 
-        // GET: Profiles/Edit/5
+        // GET: ApplicationUsers/Edit/5
         [Authorize]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var user = await GetCurrentUserAsync();
+            //var user = await GetCurrentUserAsync();
             //user.Id = id;
-            var profile = await _context.Profile.FindAsync(id);
+            var applicationUser = await _context.ApplicationUsers.FindAsync(id);
+            
+           
 
             if (id == null)
             {
                 return NotFound();
             }
 
-            if (profile == null)
+            if (applicationUser == null)
             {
                 return NotFound();
             }
-            return View(profile);
+           
+            return View(applicationUser);
         }
 
-        // POST: Profiles/Edit/5
+        // POST: ApplicationUsers/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProfileId,FirstName,LastName,UserName,Email,PhoneNumber")] Profile profile)
+        public async Task<IActionResult> Edit(string id, [Bind("UserId,FirstName,LastName,UserName,Email,PhoneNumber")] ApplicationUser applicationUser)
         {
             var user = await GetCurrentUserAsync();
 
-            if (id != profile.ProfileId)
+            if (id != applicationUser.Id)
             {
                 return NotFound();
             }
@@ -124,12 +127,12 @@ namespace Bangazon.Controllers
             {
                 try
                 {
-                    _context.Update(profile);
+                    _context.Update(applicationUser);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProfileExists(profile.ProfileId))
+                    if (!ApplicationUserExists(applicationUser.Id))
                     {
                         return NotFound();
                     }
@@ -140,51 +143,51 @@ namespace Bangazon.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(profile);
+            return View(applicationUser);
         }
 
-        // GET: Profiles/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: ApplicationUsers/Delete/5
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var profile = await _context.Profile
-                .FirstOrDefaultAsync(m => m.ProfileId == id);
-            if (profile == null)
+            var applicationUser = await _context.ApplicationUsers
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (applicationUser == null)
             {
                 return NotFound();
             }
 
-            return View(profile);
+            return View(applicationUser);
         }
 
-        // POST: Profiles/Delete/5
+        // POST: ApplicationUsers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var profile = await _context.Profile.FindAsync(id);
-            _context.Profile.Remove(profile);
+            var applicationUser = await _context.ApplicationUsers.FindAsync(id);
+            _context.ApplicationUsers.Remove(applicationUser);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProfileExists(int id)
+        private bool ApplicationUserExists(string id)
         {
-            return _context.Profile.Any(e => e.ProfileId == id);
+            return _context.ApplicationUsers.Any(e => e.Id == id);
         }
 
-        public IEnumerator<Profile> GetEnumerator()
+        public IEnumerator<ApplicationUser> GetEnumerator()
         {
             throw new NotImplementedException();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+        //IEnumerator IEnumerable.GetEnumerator()
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

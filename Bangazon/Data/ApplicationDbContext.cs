@@ -271,6 +271,6 @@ namespace Bangazon.Data {
 
         }
 
-        public DbSet<Bangazon.Models.Profile> Profile { get; set; }
+      
     }
 }
