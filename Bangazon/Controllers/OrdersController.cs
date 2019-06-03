@@ -46,6 +46,14 @@ namespace Bangazon.Controllers
             return View(order);
         }
 
+        // GET: Abandoned orders
+        public async Task<IActionResult> GetAbandonedOrders()
+        {
+            //from original get
+            var applicationDbContext = _context.Order.Include(o => o.PaymentType).Include(o => o.User);
+            return View(await applicationDbContext.ToListAsync());
+        }
+
         // GET: Orders/Create
         public IActionResult Create()
         {
