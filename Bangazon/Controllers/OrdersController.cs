@@ -56,15 +56,33 @@ namespace Bangazon.Controllers
                 .Where(o => o.PaymentType == null);
 
             return View(await applicationDbContext.ToListAsync());
-                }
-                
+        }
                 
         // GET: Abandoned orders
         public async Task<IActionResult> GetAbandonedOrders()
         {
-            //from original get
-            var applicationDbContext = _context.Order.Include(o => o.PaymentType).Include(o => o.User);
-            return View(await applicationDbContext.ToListAsync());
+            // Find all products on open orders
+             var openOrderProducts = _context.Product
+                .Include(p => p.OrderProducts)
+                .ThenInclude(op => op.Order)
+                // Only want open orders. Check for any OrderProducts on incomplete orders
+                .Where(p => p.OrderProducts.Any(op => op.Order.PaymentType == null))
+                .Include(p => p.ProductType)
+                ;
+
+            var abandonedProductTypes = openOrderProducts
+                .GroupBy(p => p.ProductTypeId,
+                         p => p.ProductType,
+                         (id, type) => new AbandonedProductTypes
+                         {
+                             ProductType = type.First(),
+                             Count = type.Count()
+                         })
+                .OrderByDescending(pt => pt.Count)
+                .Take(5)
+                ;
+
+            return View(abandonedProductTypes);
         }
 
         // GET: Multiple orders
