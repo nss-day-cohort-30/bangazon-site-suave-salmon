@@ -55,32 +55,31 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+        <tr>
 
-                <td>
-                    <a href=@($"http://localhost:5000/Products/Details/{item.ProductId}")>@Html.DisplayFor(modelItem => item.Title)</a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Quantity)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.City)
-                </td>
-                <td>
-                    <a href=@($"http://localhost:5000/Products/GetProductsByCategory/{item.ProductTypeId}")>@Html.DisplayFor(modelItem => item.ProductType.Label)</a>
-                </td>
-                <td>
-                   
-                    <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
-                    
-                </td>
-            </tr>
+            <td>
+                <a href=@($"http://localhost:5000/Products/Details/{item.ProductId}")>@Html.DisplayFor(modelItem => item.Title)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                <a href=@($"http://localhost:5000/Products/GetProductsByCategory/{item.ProductTypeId}")>@Html.DisplayFor(modelItem => item.ProductType.Label)</a>
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
+                <a asp-action="Buy" asp-route-id="@item.ProductId">Buy</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
