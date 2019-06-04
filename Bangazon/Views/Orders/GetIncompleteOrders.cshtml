@@ -24,13 +24,8 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model)
-{
-
-
-
-            @foreach (var product in item.OrderProducts)
-            {
+        @foreach (var item in Model)
+        {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.User.FirstName) @Html.DisplayFor(modelItem => item.User.LastName)
@@ -38,16 +33,20 @@
             <td>
                 @Html.DisplayFor(modelItem => item.OrderId)
             </td>
-                @foreach (var thing in item.OrderProducts)
-                {
-            <td>
 
-                    @Html.DisplayFor(modelItem => thing.Product.Title)
-            </td>
-                }
-        </tr>
+
+            @foreach (var product in item.OrderProducts)
+            {
+
+                 <td>
+
+                     <a href=@($"http://localhost:5000/Products/Details/{product.ProductId}")>@Html.DisplayFor(modelItem => product.Product.Title)</a>
+                    </td>
+               
+
 
             }
-}
-    </tbody>
+        </tr>
+                }
+            </tbody>
 </table>
