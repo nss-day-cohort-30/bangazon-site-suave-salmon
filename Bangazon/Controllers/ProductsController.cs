@@ -29,10 +29,7 @@ namespace Bangazon.Controllers
         {
             //get's and displays the last 20 products 
             var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User).OrderByDescending(a => a.DateCreated).Take(20);
-<<<<<<< HEAD
             
-=======
->>>>>>> origin/master
             return View(await applicationDbContext.ToListAsync());
         }
 

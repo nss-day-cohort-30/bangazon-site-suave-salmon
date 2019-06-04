@@ -89,8 +89,10 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> GetMultipleOrder()
         {
             //from original get
-            var applicationDbContext = _context.Order.Include(o => o.PaymentType).Include(o => o.User).Where(o => o.PaymentType == null);
-            return View(await applicationDbContext.ToListAsync());
+
+            var usersWithNull = _context.ApplicationUsers.Include(o => o.Orders).Where(g => g.Orders.Any(h => h.PaymentType == null)).ToList();
+            var usersWithMultipleOrders = usersWithNull.Where(u => u.Orders.Count() >= 2);
+            return View(usersWithMultipleOrders);
         }
 
 
