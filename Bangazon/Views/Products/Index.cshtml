@@ -4,16 +4,16 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Welcome to Bangazon!</h1>
 @using (Html.BeginForm("SearchByCity", "Products", FormMethod.Get))
 {
-    @Html.TextBox("Search", "Search By City", new { @class = "form-control" })
+    @Html.TextBox("Search", "Search Products By City", new { @class = "form-control" })
     <div>
         <input type="submit" value="Search" />
     </div>
 }
 <p>
-    <a asp-action="Create">Create New</a>
+   <h2>20 most recent products...</h2>
 </p>
 <table class="table">
     <thead>
