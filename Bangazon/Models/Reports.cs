@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Wordprocessing;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,6 +20,8 @@ namespace Bangazon.Models
         [Required]
         [StringLength(255)]
         [Display(Name = "Last Name")]
-        public string Last Name { get; set; }
+        public string LastName { get; set; }
+
+        public int openOrders { get; set; }
     }
 }

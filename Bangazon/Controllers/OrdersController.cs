@@ -54,6 +54,14 @@ namespace Bangazon.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        // GET: Abandoned orders
+        public async Task<IActionResult> GetMultipleOrder()
+        {
+            //from original get
+            var applicationDbContext = _context.Order.Include(o => o.OrderId).Include(o => o.User);
+            return View(await applicationDbContext.ToListAsync());
+        }
+
         // GET: Orders/Create
         public IActionResult Create()
         {
