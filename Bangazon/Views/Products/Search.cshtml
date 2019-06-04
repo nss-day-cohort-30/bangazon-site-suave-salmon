@@ -31,16 +31,16 @@
                 @Html.DisplayNameFor(model => model.Quantity)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UserId)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.City)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ImagePath)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductTypeId)
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductType)
             </th>
             <th></th>
         </tr>
@@ -58,7 +58,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Title)
+                <a href=@($"http://localhost:5000/Products/Details/{item.ProductId}")>@Html.DisplayFor(modelItem => item.Title)</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)
@@ -66,9 +66,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Quantity)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserId)
-            </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.City)
             </td>
@@ -76,13 +74,15 @@
                 @Html.DisplayFor(modelItem => item.ImagePath)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ProductTypeId)
+                @Html.DisplayFor(modelItem => item.User.FirstName) @Html.DisplayFor(modelItem => item.User.LastName)
             </td>
-            
-               <td>
+            <td>
+                <a href=@($"http://localhost:5000/Products/GetProductsByCategory/{item.ProductTypeId}")>@Html.DisplayFor(modelItem => item.ProductType.Label)</a>
+            </td>
+            <td>
                 <a asp-action="Buy" asp-route-id="@item.ProductId">Buy</a>
             </td>
-            
+
         </tr>
 }
     </tbody>

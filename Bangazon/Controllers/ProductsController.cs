@@ -33,14 +33,14 @@ namespace Bangazon.Controllers
 
         public async Task<IActionResult> SearchByCity(string Search)
         {
-            List<Product> productsMatched = await _context.Product.Where(product => product.City.Contains(Search)).ToListAsync();
+            List<Product> productsMatched = await _context.Product.Include(p => p.ProductType).Include(p => p.User).Where(product => product.City.Contains(Search)).ToListAsync();
             return View(productsMatched);
         }
 
         [Authorize]
         public async Task<IActionResult> Search(string Search)
         {
-            List<Product> productsMatched = await _context.Product.Where(product => product.Title.Contains(Search)).ToListAsync();
+            List<Product> productsMatched = await _context.Product.Include(p => p.ProductType).Include(p => p.User).Where(product => product.Title.Contains(Search)).ToListAsync();
             return View(productsMatched);
         }
 
