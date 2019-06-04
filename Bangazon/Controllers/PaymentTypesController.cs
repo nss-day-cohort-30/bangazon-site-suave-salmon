@@ -90,7 +90,7 @@ namespace Bangazon.Controllers
             } else
             {
                 
-                ViewData["Message"] = "Expiration date need to be in the future.";              
+                ViewBag.Message = "Expiration date need to be in the future.";              
                 return View(paymentType);
             }
             return View(paymentType);
