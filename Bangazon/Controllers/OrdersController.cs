@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bangazon.Data;
 using Bangazon.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Bangazon.Controllers
 {
@@ -46,6 +47,7 @@ namespace Bangazon.Controllers
             return View(order);
         }
 
+        [Authorize]
         public async Task<IActionResult> GetIncompleteOrders()
         {
             var applicationDbContext = _context.Order
@@ -59,6 +61,7 @@ namespace Bangazon.Controllers
         }
                 
         // GET: Abandoned orders
+        [Authorize]
         public async Task<IActionResult> GetAbandonedOrders()
         {
             // Find all products on open orders
