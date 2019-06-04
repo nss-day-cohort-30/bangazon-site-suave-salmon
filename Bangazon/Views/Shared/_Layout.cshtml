@@ -29,9 +29,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Home</a>
-                        </li>
+                       
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Create">Sell Something</a>
                         </li>
@@ -47,16 +45,20 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Reports</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                       
+                        <li>
+                            @using (Html.BeginForm("Search", "Products", FormMethod.Get))
+                            {
+                                @Html.TextBox("Search", "Search by Product Name", new { @class = "form-control" })
+                                <div>
+                                    <input type="submit" value="Search" />
+                                </div>
+                            }
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="ApplicationUsers" asp-action="Index">Profile</a>
                         </li>
-                        @*<li>
-            Search Products: @Html.TextBox("SearchProducts")<br />
-            <input type="submit" value="Search" />
-        </li>*@
+            
                     </ul>
                 </div>
             </div>
