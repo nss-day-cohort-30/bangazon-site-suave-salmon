@@ -46,7 +46,7 @@ namespace Bangazon.Controllers
             return View(order);
         }
 
-        public async Task<IActionResult> GetIncompleteOrders ()
+        public async Task<IActionResult> GetIncompleteOrders()
         {
             var applicationDbContext = _context.Order
                 .Include(o => o.PaymentType)
@@ -54,6 +54,9 @@ namespace Bangazon.Controllers
                 .Include(o => o.OrderProducts)
                 .ThenInclude(op => op.Product)
                 .Where(o => o.PaymentType == null);
+
+            return View(await applicationDbContext.ToListAsync());
+                }
                 
                 
         // GET: Abandoned orders
