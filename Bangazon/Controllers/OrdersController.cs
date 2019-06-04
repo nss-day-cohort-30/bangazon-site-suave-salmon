@@ -88,6 +88,14 @@ namespace Bangazon.Controllers
             return View(abandonedProductTypes);
         }
 
+        // GET: Multiple orders
+        public async Task<IActionResult> GetMultipleOrder()
+        {
+            var usersWithNull = _context.ApplicationUsers.Include(o => o.Orders).Where(g => g.Orders.Any(h => h.PaymentType == null)).ToList();
+            var usersWithMultipleOrders = usersWithNull.Where(u => u.Orders.Count() >= 2);
+            return View(usersWithMultipleOrders);
+        }
+
         // GET: Orders/Create
         public IActionResult Create()
         {
