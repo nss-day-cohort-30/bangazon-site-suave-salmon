@@ -71,10 +71,37 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> GetMultipleOrder()
         {
             //from original get
-            var applicationDbContext = _context.Order.Include(o => o.PaymentType).Include(o => o.User);
+            var applicationDbContext = _context.Order.Include(o => o.PaymentType).Include(o => o.User).Where(o => o.PaymentType == null);
             return View(await applicationDbContext.ToListAsync());
         }
 
+
+ /*       public async Task<IActionResult> GetMultipleOrder()
+        {
+            //from original get
+            var applicationDbContext = _context.Order.Include(o => o.PaymentType).Where(u => u.User)(o => o.PaymentType == null));
+            return View(await applicationDbContext.ToListAsync());
+        }*/
+
+
+        /*        public async Task<IActionResult> GetMultipleOrder()
+                {
+                    // create list to hold users that have more than one open order
+                    List<ApplicationUser> usersWithMultipleOrders = new List<ApplicationUser>();
+
+                    // gets list of users that have open orders
+                    var usersWithNullOrders = _context.ApplicationUsers
+                        .Include(u => u.Orders)
+                        .Where(u => u.Orders.Any(o => o.DateCompleted == null))
+                        .ToList()
+                        ;
+
+                    // gets only users who have 1 or more open ordersgi
+                    var usersWithMultipleNullOrders = usersWithNullOrders.Where(u => u.Orders.Count() >= 2).ToList();
+
+                    return View(usersWithMultipleNullOrders);
+                }
+        */
         // GET: Orders/Create
         public IActionResult Create()
         {
