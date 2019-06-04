@@ -4,7 +4,7 @@
     ViewData["Title"] = "GetMultipleOrder";
 }
 
-    <h1>GetMultipleOrder</h1>
+    <h1>Get Multiple Order</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -13,14 +13,12 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.FirstName)
+                @Html.DisplayNameFor(model => model.User)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LastName)
+                @Html.DisplayNameFor(model => model.User)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderID)
-            </th>
+
             <th></th>
         </tr>
     </thead>
@@ -32,9 +30,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.User.LastName))
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderID)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
