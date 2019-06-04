@@ -25,6 +25,9 @@ namespace Bangazon.Models
     public string AccountNumber { get; set; }
 
     [Required]
+    public DateTime ExpirationDate { get; set; }
+
+        [Required]
     public string UserId {get; set;}
 
     
