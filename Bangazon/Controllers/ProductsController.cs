@@ -28,10 +28,13 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User).OrderByDescending(a => a.DateCreated).Take(20);
-              
-           
-
             return View(await applicationDbContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> SearchByCity(string Search)
+        {
+            List<Product> productsMatched = await _context.Product.Where(product => product.City.Contains(Search)).ToListAsync();
+            return View(productsMatched);
         }
 
         [Authorize]
@@ -41,8 +44,10 @@ namespace Bangazon.Controllers
             return View(productsMatched);
         }
 
-            // GET: Products/Details/5
-            public async Task<IActionResult> Details(int? id)
+        
+
+        // GET: Products/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
