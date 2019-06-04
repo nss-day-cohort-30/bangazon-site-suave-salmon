@@ -1,10 +1,10 @@
-﻿@model IEnumerable<Bangazon.Models.Order>
+﻿@model IEnumerable<Bangazon.Models.AbandonedProductTypes>
 
 @{
     ViewData["Title"] = "GetAbandonedOrders";
 }
 
-<h1>Product Types on Abandoned Orders</h1>
+<h1>Most Common Product Types on Abandoned Orders</h1>
 
 <table class="table">
     <thead>
@@ -19,18 +19,16 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-                @foreach (var op in item.OrderProducts)
-                {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => op.Product.ProductType.Label)
-            </td>
-            <td>
-                @* DISPLAY COUNT @Html.DisplayFor(modelItem => item.DateCompleted) *@
-            </td>
-        </tr>
-                }
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.ProductType.Label
+                </td>
+                <td>
+                    @item.Count
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

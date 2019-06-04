@@ -56,42 +56,33 @@ namespace Bangazon.Controllers
                 .Where(o => o.PaymentType == null);
 
             return View(await applicationDbContext.ToListAsync());
-                }
-                
+        }
                 
         // GET: Abandoned orders
         public async Task<IActionResult> GetAbandonedOrders()
         {
-             var applicationDbContext = _context.Order
-                .Include(o => o.PaymentType)
-                .Include(o => o.User)
-                .Include(o => o.OrderProducts)
-                .ThenInclude(op => op.Product)
-                .ThenInclude(pt => pt.ProductType)
-               
+            // Find all products on open orders
+             var openOrderProducts = _context.Product
+                .Include(p => p.OrderProducts)
+                .ThenInclude(op => op.Order)
+                // Only want open orders. Check for any OrderProducts on incomplete orders
+                .Where(p => p.OrderProducts.Any(op => op.Order.PaymentType == null))
+                .Include(p => p.ProductType)
                 ;
 
-
-
-
-            return View(await applicationDbContext.ToListAsync());
-
-
-
-
-
-
-
-
-
-            /*var applicationDbContext = _context.Order.FromSql(@"select pt.Label, count(o.OrderId) 'Incomplete Orders'
-                from[Order] o
-                join OrderProduct op on op.OrderId = o.OrderId
-                join Product p on p.ProductId = op.ProductId
-                join ProductType pt on pt.ProductTypeId = p.ProductTypeId
-                group by pt.Label;")
+            var abandonedProductTypes = openOrderProducts
+                .GroupBy(p => p.ProductTypeId,
+                         p => p.ProductType,
+                         (id, type) => new AbandonedProductTypes
+                         {
+                             ProductType = type.First(),
+                             Count = type.Count()
+                         })
+                .OrderByDescending(pt => pt.Count)
+                .Take(5)
                 ;
-                //-- where o.PaymentTypeId = null*/
+
+            return View(abandonedProductTypes);
         }
 
         // GET: Orders/Create
