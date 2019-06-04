@@ -85,6 +85,43 @@ namespace Bangazon.Controllers
             return View(abandonedProductTypes);
         }
 
+        // GET: Multiple orders
+        public async Task<IActionResult> GetMultipleOrder()
+        {
+            //from original get
+
+            var usersWithNull = _context.ApplicationUsers.Include(o => o.Orders).Where(g => g.Orders.Any(h => h.PaymentType == null)).ToList();
+            var usersWithMultipleOrders = usersWithNull.Where(u => u.Orders.Count() >= 2);
+            return View(usersWithMultipleOrders);
+        }
+
+
+ /*       public async Task<IActionResult> GetMultipleOrder()
+        {
+            //from original get
+            var applicationDbContext = _context.Order.Include(o => o.PaymentType).Where(u => u.User)(o => o.PaymentType == null));
+            return View(await applicationDbContext.ToListAsync());
+        }*/
+
+
+        /*        public async Task<IActionResult> GetMultipleOrder()
+                {
+                    // create list to hold users that have more than one open order
+                    List<ApplicationUser> usersWithMultipleOrders = new List<ApplicationUser>();
+
+                    // gets list of users that have open orders
+                    var usersWithNullOrders = _context.ApplicationUsers
+                        .Include(u => u.Orders)
+                        .Where(u => u.Orders.Any(o => o.DateCompleted == null))
+                        .ToList()
+                        ;
+
+                    // gets only users who have 1 or more open ordersgi
+                    var usersWithMultipleNullOrders = usersWithNullOrders.Where(u => u.Orders.Count() >= 2).ToList();
+
+                    return View(usersWithMultipleNullOrders);
+                }
+        */
         // GET: Orders/Create
         public IActionResult Create()
         {

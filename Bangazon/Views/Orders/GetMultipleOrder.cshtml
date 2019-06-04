@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Bangazon.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "GetMultipleOrder";
+}
+
+    <h1>Users With Multiple Orders</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Orders)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.FirstName
+                    </td>
+                    <td>
+                        @item.LastName
+                    </td>
+                    <td>
+                        @* Shows # of currently open orders *@
+                        @item.Orders.Where(o => o.DateCompleted == null).ToList().Count()
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
