@@ -88,6 +88,7 @@ namespace Bangazon.Controllers
             return View(abandonedProductTypes);
         }
 
+        [Authorize]
         // GET: Multiple orders
         public async Task<IActionResult> GetMultipleOrder()
         {
@@ -96,6 +97,7 @@ namespace Bangazon.Controllers
             return View(usersWithMultipleOrders);
         }
 
+        [Authorize]
         // GET: Orders/Create
         public IActionResult Create()
         {
