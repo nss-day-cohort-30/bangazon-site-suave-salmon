@@ -9,18 +9,27 @@ using Bangazon.Data;
 using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using System.IO;
+using Bangazon.Models.ProductViewModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting.Internal;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Bangazon.Controllers
 {
     public class ProductsController : Controller
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public ProductsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ProductsController(ApplicationDbContext context, 
+                    UserManager<ApplicationUser> userManager, 
+                    IHostingEnvironment hostingEnvironment)
         {
             _context = context;
             _userManager = userManager;
+            _hostingEnvironment = hostingEnvironment;
         }
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
@@ -119,32 +128,58 @@ namespace Bangazon.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
+            UploadImageViewModel viewproduct = new UploadImageViewModel();
+            viewproduct.Product = new Product();
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label");
-            return View();
+            return View(viewproduct);
         }
 
         // POST: Products/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,DateCreated,Description,UserId,Title,Price,Quantity,City,ImagePath,ProductTypeId")] Product product)
+        public async Task<IActionResult> Create(UploadImageViewModel viewproduct)
         {
-            // Remove the user from the model validation because it is
-            // not information posted in the form
+
+            // Remove the user from the model validation because it is not information posted in the form
             ModelState.Remove("UserId");
+            ModelState.Remove("product.UserId");
+
+            // add current dateTime
+            viewproduct.Product.DateCreated = DateTime.Now;
+
+            // add current userId
             var user = await GetCurrentUserAsync();
+            viewproduct.Product.UserId = user.Id;
+
 
             if (ModelState.IsValid)
             {
-                product.User = user;
-                product.UserId = user.Id;
-                _context.Add(product);
+                if (viewproduct.ImageFile != null)
+                {
+                    // don't rely on or trust the FileName property without validation
+                    //**Warning**: The following code uses `GetTempFileName`, which throws
+                    // an `IOException` if more than 65535 files are created without 
+                    // deleting previous temporary files. A real app should either delete
+                    // temporary files or use `GetTempPath` and `GetRandomFileName` 
+                    // to create temporary file names.
+
+                    var fileName = Path.GetFileName(viewproduct.ImageFile.FileName);
+                    Path.GetTempFileName();
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images", fileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await viewproduct.ImageFile.CopyToAsync(stream);
+                        // validate file, then move to CDN or public folder
+                    }
+
+                    viewproduct.Product.ImagePath = viewproduct.ImageFile.FileName;
+                }
+                _context.Add(viewproduct.Product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
-            return View(product);
+            ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", viewproduct.Product.ProductTypeId);
+            return View(viewproduct);
         }
 
         // GET: Products/Edit/5

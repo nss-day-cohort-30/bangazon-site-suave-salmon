@@ -71,7 +71,7 @@
                 @Html.DisplayFor(modelItem => item.City)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ImagePath)
+            <img src="/images/@item.ImagePath" class="productDetailImage">
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.User.FirstName) @Html.DisplayFor(modelItem => item.User.LastName)
