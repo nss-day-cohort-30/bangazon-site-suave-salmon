@@ -69,17 +69,29 @@ namespace Bangazon.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PaymentTypeId,DateCreated,Description,AccountNumber,UserId")] PaymentType paymentType)
+        public async Task<IActionResult> Create([Bind("PaymentTypeId,DateCreated,Description,AccountNumber,ExpirationDate,UserId")] PaymentType paymentType)
         {
             ModelState.Remove("UserId");
             var user = await GetCurrentUserAsync();
-            if (ModelState.IsValid)
+            var currentDate = DateTime.Now;
+            var userExpiration = paymentType.ExpirationDate;
+            int result =  DateTime.Compare(currentDate, userExpiration);
+
+            if (result < 0)
             {
-                _context.Add(paymentType);
-                paymentType.User = user;
-                paymentType.UserId = user.Id;
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(paymentType);
+                    paymentType.User = user;
+                    paymentType.UserId = user.Id;
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+            } else
+            {
+                
+                ViewBag.Message = "Expiration date need to be in the future.";              
+                return View(paymentType);
             }
             return View(paymentType);
         }
@@ -106,7 +118,7 @@ namespace Bangazon.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PaymentTypeId,DateCreated,Description,AccountNumber,UserId")] PaymentType paymentType)
+        public async Task<IActionResult> Edit(int id, [Bind("PaymentTypeId,DateCreated,Description,AccountNumber,ExpirationDate,UserId")] PaymentType paymentType)
         {
             if (id != paymentType.PaymentTypeId)
             {
