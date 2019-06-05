@@ -8,16 +8,51 @@ using Microsoft.EntityFrameworkCore;
 using Bangazon.Data;
 using Bangazon.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Bangazon.Controllers
 {
     public class OrdersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public OrdersController(ApplicationDbContext context)
+        public OrdersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+        }
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
+        public async Task<IActionResult> AddOrder(int? id)
+        {
+
+            var user = await GetCurrentUserAsync();
+
+            Order order;
+            if (_context.Order.FirstOrDefault(x => x.UserId == user.Id && x.DateCompleted == null) == null)
+            {
+                order = new Order
+                {
+                    UserId = user.Id,
+                    User = user
+                };
+                _context.Order.Add(order);
+                _context.SaveChanges();
+            }
+
+            OrderProduct orderProduct = new OrderProduct
+            {
+                OrderId = _context.Order.FirstOrDefault(x => x.UserId == user.Id && x.DateCompleted == null).OrderId,
+                Order = _context.Order.FirstOrDefault(x => x.UserId == user.Id && x.DateCompleted == null),
+                ProductId = _context.Product.FirstOrDefault(x => x.ProductId == id).ProductId,
+                Product = _context.Product.FirstOrDefault(x => x.ProductId == id)
+            };
+            _context.OrderProduct.Add(orderProduct);
+            _context.SaveChanges();
+
+
+            return RedirectToAction("Index", "Products");
         }
 
         // GET: Orders
@@ -59,19 +94,19 @@ namespace Bangazon.Controllers
 
             return View(await applicationDbContext.ToListAsync());
         }
-                
+
         // GET: Abandoned orders
         [Authorize]
         public async Task<IActionResult> GetAbandonedOrders()
         {
             // Find all products on open orders
-             var openOrderProducts = _context.Product
-                .Include(p => p.OrderProducts)
-                .ThenInclude(op => op.Order)
-                // Only want open orders. Check for any OrderProducts on incomplete orders
-                .Where(p => p.OrderProducts.Any(op => op.Order.PaymentType == null))
-                .Include(p => p.ProductType)
-                ;
+            var openOrderProducts = _context.Product
+               .Include(p => p.OrderProducts)
+               .ThenInclude(op => op.Order)
+               // Only want open orders. Check for any OrderProducts on incomplete orders
+               .Where(p => p.OrderProducts.Any(op => op.Order.PaymentType == null))
+               .Include(p => p.ProductType)
+               ;
 
             var abandonedProductTypes = openOrderProducts
                 .GroupBy(p => p.ProductTypeId,
@@ -125,20 +160,24 @@ namespace Bangazon.Controllers
         }
 
         // GET: Orders/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        [Authorize]
+        public async Task<IActionResult> ViewCart()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var order = await _context.Order.FindAsync(id);
+            var user = await GetCurrentUserAsync();
+
+            var order = _context.Order
+               .Include(o => o.OrderProducts)
+               .ThenInclude(x => x.Product)
+               .FirstOrDefault(x => x.UserId == user.Id && x.DateCompleted == null);
+
+            var userPayments = _context.PaymentType.Where(pt => pt.UserId == user.Id);
+
             if (order == null)
             {
                 return NotFound();
             }
-            ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", order.UserId);
+            ViewData["PaymentTypeId"] = new SelectList(userPayments, "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
             return View(order);
         }
 
@@ -147,12 +186,13 @@ namespace Bangazon.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,DateCreated,DateCompleted,UserId,PaymentTypeId")] Order order)
+        public async Task<IActionResult> ViewCart([Bind("OrderId,DateCreated,DateCompleted,UserId,PaymentTypeId")] Order order)
         {
-            if (id != order.OrderId)
-            {
-                return NotFound();
-            }
+            ModelState.Remove("UserId");
+            ModelState.Remove("User");
+            var user = await GetCurrentUserAsync();
+            order.User = user;
+            order.UserId = user.Id;
 
             if (ModelState.IsValid)
             {
@@ -172,40 +212,56 @@ namespace Bangazon.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Products");
             }
             ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", order.UserId);
             return View(order);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CancelOrder()
+        {
+            var user = await GetCurrentUserAsync();
+            var activeOrder = await _context.Order.FirstOrDefaultAsync(x => x.UserId == user.Id && x.DateCompleted == null);
+            _context.Order.Remove(activeOrder);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
         // GET: Orders/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> DeleteProductFromOrder(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.Order
-                .Include(o => o.PaymentType)
-                .Include(o => o.User)
-                .FirstOrDefaultAsync(m => m.OrderId == id);
-            if (order == null)
+            var product = await _context.Product
+                .FirstOrDefaultAsync(m => m.ProductId == id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return View(order);
+            return View(product);
         }
 
         // POST: Orders/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteProductFromOrder")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var order = await _context.Order.FindAsync(id);
-            _context.Order.Remove(order);
+
+            var user = await GetCurrentUserAsync();
+
+            var activeOrder = await _context.Order.FirstOrDefaultAsync(x => x.UserId == user.Id && x.DateCompleted == null);
+
+            var orderProduct = await _context.OrderProduct.FirstOrDefaultAsync(x => x.OrderId == activeOrder.OrderId && x.ProductId == id);
+
+
+            _context.OrderProduct.Remove(orderProduct);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
