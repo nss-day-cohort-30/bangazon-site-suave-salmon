@@ -151,9 +151,20 @@ namespace Bangazon.Controllers
             var user = await GetCurrentUserAsync();
             viewproduct.Product.UserId = user.Id;
 
+            // price can't exceed $10,000
+            var userEnteredPrice = viewproduct.Product.Price;
+            var maxPrice = 10001;
+
+            if(maxPrice < userEnteredPrice)
+            {
+            ViewBag.Message = "Price can't exceed $10,000.";
+            return View(viewproduct);
+            }
+            else {
 
             if (ModelState.IsValid)
             {
+
                 if (viewproduct.ImageFile != null)
                 {
                     // don't rely on or trust the FileName property without validation
@@ -180,6 +191,7 @@ namespace Bangazon.Controllers
             }
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", viewproduct.Product.ProductTypeId);
             return View(viewproduct);
+            }
         }
 
         // GET: Products/Edit/5
