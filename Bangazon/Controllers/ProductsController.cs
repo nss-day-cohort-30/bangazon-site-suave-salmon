@@ -134,15 +134,26 @@ namespace Bangazon.Controllers
             // not information posted in the form
             ModelState.Remove("UserId");
             var user = await GetCurrentUserAsync();
-
-            if (ModelState.IsValid)
+            var userEnteredPrice = product.Price;
+            var maxPrice = 10001;
+            
+            if(maxPrice > userEnteredPrice)
             {
-                product.User = user;
-                product.UserId = user.Id;
-                _context.Add(product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    product.User = user;
+                    product.UserId = user.Id;
+                    _context.Add(product);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+
+            } else
+            {
+                ViewBag.Message = "Price can't exceed $10,000.";
+                return View(product);
             }
+
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
             return View(product);
         }
