@@ -4,50 +4,55 @@
     ViewData["Title"] = "GetOrderHistory";
 }
 
-<h1>GetOrderHistory</h1>
+<h1>My Order History</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.DateCreated)
+                Order Date
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateCompleted)
+                Order Number
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User)
+                Products
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PaymentType)
+                total
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCompleted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaymentType.AccountNumber)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCompleted) 
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderId)
+                </td>
+                
+                @{Double totalPrice = 0; }
+               
+
+                <td>
+                @foreach (var product in item.OrderProducts)
+                    {
+                         { totalPrice = totalPrice + product.Product.Price; }
+
+
+                         <a href=@($"http://localhost:5000/Products/Details/{product.ProductId}")>@Html.DisplayFor(modelItem => product.Product.Title) / </a>
+
+
+                 }
+                 </td>
+<td>
+                   $@totalPrice
+                </td>
+            </tr>
+            
+        }
     </tbody>
 </table>
