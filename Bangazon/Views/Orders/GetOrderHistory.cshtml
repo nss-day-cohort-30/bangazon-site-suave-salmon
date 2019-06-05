@@ -21,6 +21,9 @@
             <th>
                 total
             </th>
+            <th>
+                Payment Type
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -50,6 +53,9 @@
                  </td>
 <td>
                    $@totalPrice
+                </td>
+                <td>
+                    @(Html.DisplayFor(modelItem => item.PaymentType.Description))
                 </td>
             </tr>
             
