@@ -51,6 +51,7 @@ namespace Bangazon.Controllers
             _context.OrderProduct.Add(orderProduct);
             _context.SaveChanges();
 
+            TempData["notice"] = "Successfully registered";
 
             return RedirectToAction("Index", "Products");
         }
@@ -166,6 +167,12 @@ namespace Bangazon.Controllers
 
             var user = await GetCurrentUserAsync();
 
+            //Order order;
+            //if (_context.Order.FirstOrDefault(x => x.UserId == user.Id && x.DateCompleted == null) == null)
+            //{
+                
+            //}
+
             var order = _context.Order
                .Include(o => o.OrderProducts)
                .ThenInclude(x => x.Product)
@@ -219,17 +226,25 @@ namespace Bangazon.Controllers
             return View(order);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CancelOrder()
+
+        public async Task<IActionResult> CancelOrder(int? id)
         {
             var user = await GetCurrentUserAsync();
-            var activeOrder = await _context.Order.FirstOrDefaultAsync(x => x.UserId == user.Id && x.DateCompleted == null);
+            var activeOrder = await _context.Order
+                .Include(x => x.OrderProducts).
+                FirstOrDefaultAsync(x => x.UserId == user.Id && x.DateCompleted == null);
+
+         foreach( var item in activeOrder.OrderProducts)
+            {
+                _context.OrderProduct.Remove(item);
+            }
+
             _context.Order.Remove(activeOrder);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Products");
         }
 
+        [HttpPost]
         // GET: Orders/Delete/5
         public async Task<IActionResult> DeleteProductFromOrder(int? id)
         {

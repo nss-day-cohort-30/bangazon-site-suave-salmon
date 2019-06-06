@@ -57,7 +57,7 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Buy" asp-route-id="@Model.ProductId">Buy</a> |
+    <a asp-action="AddOrder" asp-route-id="@Model.ProductId" asp-controller="Orders">Buy</a> |
     <a asp-action="Edit" asp-route-id="@Model.ProductId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
