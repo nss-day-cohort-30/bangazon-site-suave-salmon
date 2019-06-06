@@ -56,6 +56,9 @@ namespace Bangazon.Controllers
             return RedirectToAction("Index", "Products");
         }
 
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
+
         // GET: Orders
         public async Task<IActionResult> Index()
         {
@@ -91,7 +94,7 @@ namespace Bangazon.Controllers
                 .Include(o => o.User)
                 .Include(o => o.OrderProducts)
                 .ThenInclude(op => op.Product)
-                .Where(o => o.PaymentType == null);
+                .Where(o => o.PaymentTypeId == null);
 
             return View(await applicationDbContext.ToListAsync());
         }
@@ -123,6 +126,21 @@ namespace Bangazon.Controllers
 
             return View(abandonedProductTypes);
         }
+
+        public async Task<IActionResult> GetOrderHistory()
+        {
+            
+            var user = await GetCurrentUserAsync();
+            var applicationDbContext = _context.Order
+                .Include(o => o.PaymentType)
+                .Include(o => o.User)
+                .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.Product)
+                .Where(o => o.PaymentTypeId != null && o.UserId == user.Id );
+
+            return View(await applicationDbContext.ToListAsync());
+        }
+
 
         [Authorize]
         // GET: Multiple orders

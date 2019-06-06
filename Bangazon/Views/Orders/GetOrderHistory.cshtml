@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Bangazon.Models.Order>
+
+@{
+    ViewData["Title"] = "GetOrderHistory";
+}
+
+<h1>My Order History</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Order Date
+            </th>
+            <th>
+                Order Number
+            </th>
+            <th>
+                Products
+            </th>
+            <th>
+                total
+            </th>
+            <th>
+                Payment Type
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCompleted) 
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderId)
+                </td>
+                
+                @{Double totalPrice = 0; }
+               
+
+                <td>
+                @foreach (var product in item.OrderProducts)
+                    {
+                         { totalPrice = totalPrice + product.Product.Price; }
+
+
+                         <a href=@($"http://localhost:5000/Products/Details/{product.ProductId}")>@Html.DisplayFor(modelItem => product.Product.Title) / </a>
+
+
+                 }
+                 </td>
+<td>
+                   $@totalPrice
+                </td>
+                <td>
+                    @(Html.DisplayFor(modelItem => item.PaymentType.Description))
+                </td>
+            </tr>
+            
+        }
+    </tbody>
+</table>
