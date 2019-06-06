@@ -56,9 +56,6 @@ namespace Bangazon.Controllers
             return RedirectToAction("Index", "Products");
         }
 
-        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
-
-
         // GET: Orders
         public async Task<IActionResult> Index()
         {
@@ -219,10 +216,21 @@ namespace Bangazon.Controllers
             order.User = user;
             order.UserId = user.Id;
 
+            order = _context.Order
+               .Include(o => o.OrderProducts)
+               .ThenInclude(x => x.Product)
+               .FirstOrDefault(x => x.UserId == user.Id && x.DateCompleted == null);
+
+
             if (ModelState.IsValid)
             {
                 try
                 {
+                    foreach (var item in order.OrderProducts)
+                    {
+                        item.Product.Quantity--;
+                        _context.Update(item.Product);
+                    }
                     _context.Update(order);
                     await _context.SaveChangesAsync();
                 }
