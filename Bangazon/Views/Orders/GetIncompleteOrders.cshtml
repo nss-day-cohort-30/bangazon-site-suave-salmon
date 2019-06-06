@@ -6,9 +6,6 @@
 
 <h1>GetIncompleteOrders</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -33,20 +30,13 @@
             <td>
                 @Html.DisplayFor(modelItem => item.OrderId)
             </td>
-
-
-            @foreach (var product in item.OrderProducts)
-            {
-
-                 <td>
-
-                     <a href=@($"http://localhost:5000/Products/Details/{product.ProductId}")>@Html.DisplayFor(modelItem => product.Product.Title)</a>
-                    </td>
-               
-
-
-            }
-        </tr>
+                    @foreach (var product in item.OrderProducts)
+                    {
+                        <td>
+                            <a href=@($"http://localhost:5000/Products/Details/{product.ProductId}")>@Html.DisplayFor(modelItem => product.Product.Title)</a>
+                        </td>
+                    }
+            </tr>
                 }
             </tbody>
 </table>

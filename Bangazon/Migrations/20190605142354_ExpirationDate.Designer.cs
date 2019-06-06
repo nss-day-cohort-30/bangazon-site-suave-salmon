@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bangazon.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190603165620_NewUsers09")]
-    partial class NewUsers09
+    [Migration("20190605142354_ExpirationDate")]
+    partial class ExpirationDate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -83,9 +83,9 @@ namespace Bangazon.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "121f0a5e-b1a9-4309-ab1a-8f2825354298",
+                            Id = "8d764369-e9b5-40e4-a2a8-83f86b4c1ccf",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "36d324a7-f5b7-430b-8891-0c7096a56426",
+                            ConcurrencyStamp = "14cfcda4-35c4-4751-80cd-0c15744cfdca",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             FirstName = "Admina",
@@ -93,18 +93,18 @@ namespace Bangazon.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN@ADMIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMx3gesVlf4lM4dF9eOucAqPq8QWpz+FFkEY0HjPMOozQLqqPZtX2fjZLSmH+OB4JQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGB2mLfNumVKMJW1NVkYaqoSBaGaExLU48SHWQ7Yr3DnU6OMyfJorn63kwmJMKZKrw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c3279ef4-b1a1-4487-9ee9-41cad90b58dd",
+                            SecurityStamp = "d49d003f-dfd4-436a-a2ac-d9237cb0d2fd",
                             StreetAddress = "123 Infinity Way",
                             TwoFactorEnabled = false,
                             UserName = "admin@admin.com"
                         },
                         new
                         {
-                            Id = "73c57045-ac38-4ddc-a247-26bc158b9ffd",
+                            Id = "6bc4d025-a5c4-4f9e-8bfb-0bf396fb905c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "447fabfd-c156-4196-b82e-7eb032e47e65",
+                            ConcurrencyStamp = "9128ec4e-02b1-49ca-88e1-7e15b5871e65",
                             Email = "xdomix52@yahoo.com",
                             EmailConfirmed = true,
                             FirstName = "Dom",
@@ -112,18 +112,18 @@ namespace Bangazon.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "XDOMI52X@YAHOO.COM",
                             NormalizedUserName = "XDOMI52X@YAHOO.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHwr706CzV6ukWvLpr/LJy8aeDTmWq8RA1hYfLqoSQ7WpYifbRpO1+JW713DxtIZ6A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEABV8Vi8nVnyDV+exMnPH1t+/r2O6KVQBUiuzreYm8l34bbk6Y+FGecWql4qjTwBow==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "16b12977-dfc1-4623-84d2-9f382c923fd6",
+                            SecurityStamp = "41e44de8-ee67-4ea1-9bd3-2a502656ce28",
                             StreetAddress = "5937 place",
                             TwoFactorEnabled = false,
                             UserName = "xdomix52@yahoo.com"
                         },
                         new
                         {
-                            Id = "309d9d49-6b54-4684-8982-8273cd8f1eb0",
+                            Id = "420e2dde-5bb4-4b03-8a11-32d818a5c700",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8ccc5ef0-33fd-4170-83f9-23dba23205f5",
+                            ConcurrencyStamp = "3b5af85e-f14a-4fcd-8886-5c2eacde9383",
                             Email = "person@person.com",
                             EmailConfirmed = true,
                             FirstName = "person",
@@ -132,7 +132,7 @@ namespace Bangazon.Migrations
                             NormalizedEmail = "PERSON@PERSON.COM",
                             NormalizedUserName = "PERSON@PERSON.COM",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0eb0e033-48b7-40ac-8da3-8b0bde553ca2",
+                            SecurityStamp = "a2495c1c-6e57-4bf2-9fbd-93e5291bb7b6",
                             StreetAddress = "another place",
                             TwoFactorEnabled = false,
                             UserName = "person@person.com"
@@ -169,25 +169,25 @@ namespace Bangazon.Migrations
                         {
                             OrderId = 1,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = "121f0a5e-b1a9-4309-ab1a-8f2825354298"
+                            UserId = "8d764369-e9b5-40e4-a2a8-83f86b4c1ccf"
                         },
                         new
                         {
                             OrderId = 2,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = "121f0a5e-b1a9-4309-ab1a-8f2825354298"
+                            UserId = "8d764369-e9b5-40e4-a2a8-83f86b4c1ccf"
                         },
                         new
                         {
                             OrderId = 3,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = "121f0a5e-b1a9-4309-ab1a-8f2825354298"
+                            UserId = "8d764369-e9b5-40e4-a2a8-83f86b4c1ccf"
                         },
                         new
                         {
                             OrderId = 4,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = "121f0a5e-b1a9-4309-ab1a-8f2825354298"
+                            UserId = "8d764369-e9b5-40e4-a2a8-83f86b4c1ccf"
                         });
                 });
 
@@ -254,6 +254,8 @@ namespace Bangazon.Migrations
                         .IsRequired()
                         .HasMaxLength(55);
 
+                    b.Property<DateTime>("ExpirationDate");
+
                     b.Property<string>("UserId")
                         .IsRequired();
 
@@ -270,7 +272,8 @@ namespace Bangazon.Migrations
                             AccountNumber = "86753095551212",
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "American Express",
-                            UserId = "121f0a5e-b1a9-4309-ab1a-8f2825354298"
+                            ExpirationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = "8d764369-e9b5-40e4-a2a8-83f86b4c1ccf"
                         },
                         new
                         {
@@ -278,7 +281,8 @@ namespace Bangazon.Migrations
                             AccountNumber = "4102948572991",
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Discover",
-                            UserId = "121f0a5e-b1a9-4309-ab1a-8f2825354298"
+                            ExpirationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = "8d764369-e9b5-40e4-a2a8-83f86b4c1ccf"
                         },
                         new
                         {
@@ -286,7 +290,8 @@ namespace Bangazon.Migrations
                             AccountNumber = "0000133700000",
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Visa",
-                            UserId = "121f0a5e-b1a9-4309-ab1a-8f2825354298"
+                            ExpirationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = "8d764369-e9b5-40e4-a2a8-83f86b4c1ccf"
                         },
                         new
                         {
@@ -294,7 +299,8 @@ namespace Bangazon.Migrations
                             AccountNumber = "1111800711111",
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "American Express",
-                            UserId = "121f0a5e-b1a9-4309-ab1a-8f2825354298"
+                            ExpirationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = "8d764369-e9b5-40e4-a2a8-83f86b4c1ccf"
                         });
                 });
 
@@ -347,7 +353,7 @@ namespace Bangazon.Migrations
                             ProductTypeId = 1,
                             Quantity = 100,
                             Title = "Kite",
-                            UserId = "121f0a5e-b1a9-4309-ab1a-8f2825354298"
+                            UserId = "8d764369-e9b5-40e4-a2a8-83f86b4c1ccf"
                         },
                         new
                         {
@@ -358,7 +364,7 @@ namespace Bangazon.Migrations
                             ProductTypeId = 2,
                             Quantity = 5,
                             Title = "Wheelbarrow",
-                            UserId = "121f0a5e-b1a9-4309-ab1a-8f2825354298"
+                            UserId = "8d764369-e9b5-40e4-a2a8-83f86b4c1ccf"
                         },
                         new
                         {
@@ -369,7 +375,7 @@ namespace Bangazon.Migrations
                             ProductTypeId = 2,
                             Quantity = 5,
                             Title = "Fridge",
-                            UserId = "121f0a5e-b1a9-4309-ab1a-8f2825354298"
+                            UserId = "8d764369-e9b5-40e4-a2a8-83f86b4c1ccf"
                         },
                         new
                         {
@@ -380,7 +386,7 @@ namespace Bangazon.Migrations
                             ProductTypeId = 3,
                             Quantity = 5,
                             Title = "God of War",
-                            UserId = "121f0a5e-b1a9-4309-ab1a-8f2825354298"
+                            UserId = "8d764369-e9b5-40e4-a2a8-83f86b4c1ccf"
                         },
                         new
                         {
@@ -391,7 +397,7 @@ namespace Bangazon.Migrations
                             ProductTypeId = 4,
                             Quantity = 5,
                             Title = "something",
-                            UserId = "121f0a5e-b1a9-4309-ab1a-8f2825354298"
+                            UserId = "8d764369-e9b5-40e4-a2a8-83f86b4c1ccf"
                         });
                 });
 

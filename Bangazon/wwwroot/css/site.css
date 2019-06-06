@@ -45,6 +45,12 @@ body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
+
+.productDetailImage {
+    height: 75px;
+    width: 75px;
+}
+
 .footer {
   position: absolute;
   bottom: 0;

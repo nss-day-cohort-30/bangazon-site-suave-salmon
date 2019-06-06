@@ -12,8 +12,13 @@
         <input type="submit" value="Search" />
     </div>
 }
+
+@if (TempData["notice"] != null)
+{
+    <p>@TempData["notice"]</p>
+}
 <p>
-   <h2>20 most recent products...</h2>
+    <h2>20 most recent products...</h2>
 </p>
 <table class="table">
     <thead>
@@ -48,41 +53,49 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-<tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.DateCreated)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Description)
-    </td>
-    <td>
-        <a href=@($"http://localhost:5000/Products/Details/{item.ProductId}")>@Html.DisplayFor(modelItem => item.Title)</a>
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Price)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Quantity)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.City)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.ImagePath)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.User.FirstName) @Html.DisplayFor(modelItem => item.User.LastName)
-    </td>
-    <td>
-        <a href=@($"http://localhost:5000/Products/GetProductsByCategory/{item.ProductTypeId}")>@Html.DisplayFor(modelItem => item.ProductType.Label)</a>
-    </td>
-    <td>
-            <a asp-action="Buy" asp-route-id="@item.ProductId">Buy</a> 
-        </td>
-</tr>
-}
-    </tbody>
+    @if (TempData["notice"] != null)
+    {
+        <p>@TempData["notice"]</p>
+    }
+<tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <a href=@($"http://localhost:5000/Products/Details/{item.ProductId}")>@Html.DisplayFor(modelItem => item.Title)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImagePath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.FirstName) @Html.DisplayFor(modelItem => item.User.LastName)
+            </td>
+            <td>
+                <a href=@($"http://localhost:5000/Products/GetProductsByCategory/{item.ProductTypeId}")>@Html.DisplayFor(modelItem => item.ProductType.Label)</a>
+            </td>
+            <td>
+                <a asp-action="AddOrder" asp-controller="Orders" asp-route-id="@item.ProductId">Buy</a>
+            </td>
+        </tr>
+    }
+    @if (TempData["notice"] != null)
+    {
+        <p>@TempData["notice"]</p>
+    }
+</tbody>
 </table>
